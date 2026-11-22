@@ -1,0 +1,127 @@
+{
+  "info": {
+    "_postman_id": "a14f34ed-2eb3-431e-956b-6469c2b7f762",
+    "name": "NiMap",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58888421",
+    "_collection_link": "https://go.postman.co/collection/58888421-a14f34ed-2eb3-431e-956b-6469c2b7f762?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "valid login",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"8433593380\",\r\n  \"password\": \"Hacker007\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/account/authenticate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "account",
+            "authenticate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "invalid login",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"Test@123\",\r\n  \"password\": \"Hacker007\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/account/authenticate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "account",
+            "authenticate"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Leads",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response Status is 200 and Message is Success\", function () {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.Status).to.eql(200);\r\n    pm.expect(jsonData.Message).to.eql(\"Success\");\r\n});\r\n\r\npm.test(\"Leads list includes test customer Pandu_2 or pandu\", function () {\r\n    const jsonData = pm.response.json();\r\n    const leads = (jsonData.data && jsonData.data.Leads) || [];\r\n    const found = leads.some(\r\n        (lead) => lead.LeadName === \"Pandu_2\" || lead.LeadName === \"pandu\"\r\n    );\r\n    pm.expect(found).to.be.true;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "{{basic_auth_1dau}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"CityId\": 0,\r\n    \"CountryId\": 0,\r\n    \"From\": 1,\r\n    \"LeadSourceIds\": \"\",\r\n    \"LeadStageIds\": \"\",\r\n    \"LeadTypeIds\": \"\",\r\n    \"LocalityId\": \"\",\r\n    \"StateId\": 0,\r\n    \"StatusIds\": \"\",\r\n    \"TagIds\": \"\",\r\n    \"TerritoryIds\": \"\",\r\n    \"Text\": \"\",\r\n    \"To\": 30,\r\n    \"UserIds\": \"\",\r\n    \"ReferBy\": \"\",\r\n    \"FromDate\": \"\",\r\n    \"ToDate\": \"\",\r\n    \"DateType\": \"ModifiedDate\",\r\n    \"CreatedByUserIds\": \"\",\r\n    \"LeadStatus\": null\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/CRM/Leads",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "CRM",
+            "Leads"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "bearer_token_0ut6",
+      "secret": true
+    },
+    {
+      "key": "basic_auth_1dau",
+      "secret": true
+    }
+  ]
+}
