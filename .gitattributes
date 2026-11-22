@@ -1,2 +1,11 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Maven build output
+/target/
+
+# Eclipse IDE metadata
+/.settings/
+/.classpath
+/.project
+
+# TestNG & Cucumber reports / logs
+/test-output/
+*.log
