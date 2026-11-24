@@ -17,7 +17,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"username\": \"8433593380\",\r\n  \"password\": \"Hacker007\"\r\n}",
+          "raw": "{\n  \"username\": \"{{login_username}}\",\n  \"password\": \"{{login_password}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -48,7 +48,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"username\": \"Test@123\",\r\n  \"password\": \"Hacker007\"\r\n}",
+          "raw": "{\n  \"username\": \"{{login_username}}\",\n  \"password\": \"{{login_password}}\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -116,11 +116,31 @@
   ],
   "variable": [
     {
-      "key": "bearer_token_0ut6",
+      "key": "login_username",
+      "value": "",
+      "type": "string",
+      "description": "Set locally in Postman; do not commit credentials.",
+      "secret": true
+    },
+    {
+      "key": "login_password",
+      "value": "",
+      "type": "string",
+      "description": "Set locally in Postman; do not commit credentials.",
       "secret": true
     },
     {
       "key": "basic_auth_1dau",
+      "value": "",
+      "type": "string",
+      "description": "Set locally in Postman; do not commit credentials.",
+      "secret": true
+    },
+    {
+      "key": "bearer_token_0ut6",
+      "value": "",
+      "type": "string",
+      "description": "Reserved; set locally only if required.",
       "secret": true
     }
   ]
