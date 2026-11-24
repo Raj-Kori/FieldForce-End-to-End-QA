@@ -1,41 +1,54 @@
 # FieldForce API Testing Notes
 
-## 1. Environment & Collection Setup
-* **Postman Collection:** `postman/NiMap.postman_collection.json`
-* **Postman Environment:** `postman/FieldForce_Env.postman_environment.json` (`FieldForce_Env`)
-* **Environment & Collection Variables:**
-  * `{{base_url}}`: Base API host URL for Test Field Force (`https://test.fieldforceconnect.com`)
-  * `{{basic_auth_1dau}}`: Authorization header credential used for authenticated CRM endpoints (stored as a secret variable; replace placeholder before running)
-  * `{{bearer_token_0ut6}}`: Reserved token variable (marked secret)
+## 1. Environment and collection setup
 
----
+- **Postman collection:** `postman/NiMap.postman_collection.json`
+- **Postman environment:** `postman/FieldForce_Env.postman_environment.json`
+- **Base URL variable:** `{{base_url}}`
+- **Login variables:** `{{login_username}}` and `{{login_password}}`
+- **Protected API header variable:** `{{basic_auth_1dau}}`
 
-## 2. Authentication Behavior Observation
-* Calling `POST {{base_url}}/api/account/authenticate` with valid credentials returns `"token": ""` in the response payload.
-* Because the login endpoint returns an empty token string, downstream protected requests (such as `POST {{base_url}}/api/CRM/Leads`) pass `{{basic_auth_1dau}}` in the `Authorization` request header.
+Set credentials locally in Postman. Do not commit real values to the repository.
 
----
+## 2. Authentication behavior observed
 
-## 3. Tested Endpoints Summary
+The exported collection uses `POST {{base_url}}/api/account/authenticate` for valid and invalid login checks.
 
-| Request Name | Method | Endpoint | Auth / Headers | Validation & Expected Outcome |
-| :--- | :--- | :--- | :--- | :--- |
-| **valid login** | `POST` | `{{base_url}}/api/account/authenticate` | `No Auth` | HTTP `200 OK`; authenticates valid user credentials |
-| **invalid login** | `POST` | `{{base_url}}/api/account/authenticate` | `No Auth` | HTTP `200 OK`; returns `"success": false` and `"errormessage": "Invalid Email Id / Mobile No or Password."` |
-| **Get Leads** | `POST` | `{{base_url}}/api/CRM/Leads` | `Authorization: {{basic_auth_1dau}}` | HTTP `200 OK`; JSON body verifies `Status == 200`, `Message == "Success"`, and presence of created test customer records (`Pandu_2` / `pandu`) in `data.Leads` |
+The valid-login response recorded in the assignment notes contained an empty `token` value. The exported Get Leads request uses `{{basic_auth_1dau}}` in its Authorization header. This is the observed setup in the supplied artifacts; do not assume the login token is reusable unless the API behavior is confirmed.
 
----
+## 3. Requests present in the exported collection
 
-## 4. Automated Postman Assertions (`Get Leads`)
-The `Get Leads` request includes three JavaScript test assertions in Postman:
-1. **HTTP Status Check:** Verifies `pm.response.to.have.status(200)`.
-2. **Payload Status & Message Check:** Asserts `jsonData.Status === 200` and `jsonData.Message === "Success"`.
-3. **Customer/Lead Data Verification:** Searches `jsonData.data.Leads` to confirm test records (`Pandu_2` or `pandu`) are returned.
+| Request | Method | Endpoint | Purpose |
+|---|---|---|---|
+| valid login | POST | `{{base_url}}/api/account/authenticate` | Submit valid login credentials |
+| invalid login | POST | `{{base_url}}/api/account/authenticate` | Verify invalid-credential response |
+| Get Leads | POST | `{{base_url}}/api/CRM/Leads` | Retrieve/filter leads and validate response data |
 
----
+### Get Leads assertions
 
-## 5. How to Import & Run in Postman
-1. Open Postman and click **Import**.
-2. Import both `postman/NiMap.postman_collection.json` and `postman/FieldForce_Env.postman_environment.json`.
-3. Select **FieldForce_Env** from the top-right environment dropdown.
-4. Set your `{{base_url}}` and `{{basic_auth_1dau}}` values in the environment/collection variables, then run the requests individually or via **Collection Runner**.
+The exported request includes assertions for:
+
+1. HTTP status code is 200.
+2. Response payload contains `Status == 200` and `Message == "Success"`.
+3. The returned `data.Leads` array includes one of the named test records used in the collection assertion.
+
+## 4. Add Customer API coverage — current limitation
+
+The supplied Postman collection does **not** contain a dedicated Add Customer API request. The supplied project source shows an **Add Customer UI automation workflow** using Selenium/Cucumber, which is different from calling an API directly.
+
+The manual-testing workbook currently lists TC-70 to TC-73 as Add Customer/API-related cases and marks them PASS. However, the exported collection does not provide the endpoint, request payload, response assertions, or execution evidence for those cases.
+
+Therefore:
+
+- Do not claim that the current Postman collection demonstrates Add Customer API testing.
+- Keep the existing workbook results only if you have separate, genuine execution evidence for those cases.
+- If the endpoint and payload are available from the application/API documentation or a captured successful request, add the real request and positive/negative assertions to Postman.
+- Do not guess an endpoint, payload schema, status code, or response structure.
+
+## 5. Import and run
+
+1. Open Postman and choose **Import**.
+2. Import the collection and environment JSON files.
+3. Select the `FieldForce_Env` environment.
+4. Set `base_url`, `login_username`, `login_password`, and the protected API credential variable locally.
+5. Run the requests individually and inspect both the Postman test results and response body.
